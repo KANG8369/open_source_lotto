@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block title %}관리자 대시보드{% endblock %}
+
+{% block content %}
+<section class="title-row">
+  <div>
+    <p class="eyebrow">Staff only</p>
+    <h1>관리자 대시보드</h1>
+  </div>
+  <a class="button" href="{% url 'lotto:create_draw' %}">추첨하기</a>
+</section>
+
+<section class="metrics">
+  <div><span>총 판매</span><strong>{{ sales_count }}</strong></div>
+  <div><span>수동 구매</span><strong>{{ manual_count }}</strong></div>
+  <div><span>자동 구매</span><strong>{{ auto_count }}</strong></div>
+</section>
+
+<section class="grid two">
+  <article class="panel">
+    <h2>판매 내역</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>복권 번호</th>
+          <th>구매자</th>
+          <th>방식</th>
+          <th>번호</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for ticket in tickets %}
+          <tr>
+            <td><a href="{{ ticket.get_absolute_url }}">{{ ticket.ticket_code }}</a></td>
+            <td>{{ ticket.buyer_name }}</td>
+            <td>{{ ticket.get_purchase_type_display }}</td>
+            <td>{{ ticket.numbers }}</td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="4">판매 내역이 없습니다.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </article>
+
+  <article class="panel">
+    <h2>추첨 내역</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>회차</th>
+          <th>당첨 번호</th>
+          <th>보너스</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for draw in draws %}
+          <tr>
+            <td><a href="{% url 'lotto:draw_detail' draw.id %}">{{ draw.round_number }}회</a></td>
+            <td>{{ draw.winning_numbers }}</td>
+            <td>{{ draw.bonus_number }}</td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="3">추첨 내역이 없습니다.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </article>
+</section>
+
+<section class="panel wide">
+  <h2>최근 당첨 내역</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>회차</th>
+        <th>복권 번호</th>
+        <th>구매자</th>
+        <th>일치</th>
+        <th>결과</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for result in results %}
+        <tr>
+          <td>{{ result.draw.round_number }}</td>
+          <td>{{ result.ticket.ticket_code }}</td>
+          <td>{{ result.ticket.buyer_name }}</td>
+          <td>{{ result.match_count }}</td>
+          <td>{{ result.rank }}</td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="5">당첨 내역이 없습니다.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}

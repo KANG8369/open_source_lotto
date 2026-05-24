@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}복권 {{ ticket.ticket_code }}{% endblock %}
+
+{% block content %}
+<section class="panel wide">
+  <p class="eyebrow">구매 완료</p>
+  <h1>{{ ticket.ticket_code }}</h1>
+  <div class="number-row">
+    {% for number in ticket.number_list %}
+      <span>{{ number }}</span>
+    {% endfor %}
+  </div>
+  <dl class="details">
+    <div><dt>구매자</dt><dd>{{ ticket.buyer_name }}</dd></div>
+    <div><dt>구매 방식</dt><dd>{{ ticket.get_purchase_type_display }}</dd></div>
+    <div><dt>구매 일시</dt><dd>{{ ticket.created_at|date:"Y-m-d H:i" }}</dd></div>
+  </dl>
+</section>
+
+<section class="panel wide">
+  <h2>당첨 확인 결과</h2>
+  {% if latest_result %}
+    <p class="rank">{{ latest_result.rank }}</p>
+    <p>{{ latest_result.draw.round_number }}회차 기준, 일치 번호 {{ latest_result.match_count }}개{% if latest_result.bonus_matched %}와 보너스 번호가 일치했습니다.{% else %}입니다.{% endif %}</p>
+  {% else %}
+    <p class="empty">아직 추첨 결과가 없습니다. 관리자가 추첨을 진행하면 결과가 표시됩니다.</p>
+  {% endif %}
+
+  {% if results %}
+    <table>
+      <thead>
+        <tr>
+          <th>회차</th>
+          <th>당첨 번호</th>
+          <th>보너스</th>
+          <th>일치</th>
+          <th>결과</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for result in results %}
+          <tr>
+            <td>{{ result.draw.round_number }}</td>
+            <td>{{ result.draw.winning_numbers }}</td>
+            <td>{{ result.draw.bonus_number }}</td>
+            <td>{{ result.match_count }}</td>
+            <td>{{ result.rank }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+</section>
+{% endblock %}

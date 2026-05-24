@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}추첨하기{% endblock %}
+
+{% block content %}
+<section class="panel narrow">
+  <p class="eyebrow">관리자 기능</p>
+  <h1>추첨하기</h1>
+  <form method="post" class="form">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">추첨 결과 저장</button>
+  </form>
+</section>
+{% endblock %}

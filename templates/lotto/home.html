@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}6/45 Lotto 구매{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <div>
+    <p class="eyebrow">Django + Docker 과제</p>
+    <h1>6개의 번호로 오늘의 행운을 확인하세요.</h1>
+    <p class="lead">일반 사용자는 수동 또는 자동 번호로 복권을 구매하고, 발급된 복권 번호로 추첨 결과를 확인할 수 있습니다.</p>
+  </div>
+  {% if latest_draw %}
+    <div class="latest-draw">
+      <span>최근 추첨 {{ latest_draw.round_number }}회차</span>
+      <strong>{{ latest_draw.winning_numbers }}</strong>
+      <small>보너스 {{ latest_draw.bonus_number }}</small>
+    </div>
+  {% endif %}
+</section>
+
+<section class="grid two">
+  <article class="panel">
+    <h2>복권 구매</h2>
+    <form action="{% url 'lotto:purchase_ticket' %}" method="post" class="form">
+      {% csrf_token %}
+      {{ purchase_form.non_field_errors }}
+      <label>
+        구매자
+        {{ purchase_form.buyer_name }}
+        {{ purchase_form.buyer_name.errors }}
+      </label>
+      <fieldset>
+        <legend>구매 방식</legend>
+        {{ purchase_form.purchase_type }}
+        {{ purchase_form.purchase_type.errors }}
+      </fieldset>
+      <label>
+        수동 번호
+        {{ purchase_form.manual_numbers }}
+        <small>{{ purchase_form.manual_numbers.help_text }}</small>
+        {{ purchase_form.manual_numbers.errors }}
+      </label>
+      <button type="submit">구매하기</button>
+    </form>
+  </article>
+
+  <article class="panel">
+    <h2>당첨 확인</h2>
+    <form action="{% url 'lotto:check_ticket' %}" method="post" class="form compact">
+      {% csrf_token %}
+      <label>
+        복권 번호
+        {{ check_form.ticket_code }}
+      </label>
+      <button type="submit">확인하기</button>
+    </form>
+    <div class="recent">
+      <h3>최근 구매</h3>
+      {% if recent_tickets %}
+        <ul class="ticket-list">
+          {% for ticket in recent_tickets %}
+            <li>
+              <a href="{{ ticket.get_absolute_url }}">{{ ticket.ticket_code }}</a>
+              <span>{{ ticket.get_purchase_type_display }} · {{ ticket.numbers }}</span>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="empty">아직 판매 내역이 없습니다.</p>
+      {% endif %}
+    </div>
+  </article>
+</section>
+{% endblock %}

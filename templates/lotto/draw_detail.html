@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}{{ draw.round_number }}회차 결과{% endblock %}
+
+{% block content %}
+<section class="panel wide">
+  <p class="eyebrow">추첨 결과</p>
+  <h1>{{ draw.round_number }}회차</h1>
+  <div class="number-row">
+    {% for number in draw.number_list %}
+      <span>{{ number }}</span>
+    {% endfor %}
+    <span class="bonus">{{ draw.bonus_number }}</span>
+  </div>
+</section>
+
+<section class="metrics">
+  {% for rank, count in summary.items %}
+    <div><span>{{ rank }}</span><strong>{{ count }}</strong></div>
+  {% endfor %}
+</section>
+
+<section class="panel wide">
+  <h2>당첨 내역</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>복권 번호</th>
+        <th>구매자</th>
+        <th>선택 번호</th>
+        <th>일치</th>
+        <th>보너스</th>
+        <th>결과</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for result in results %}
+        <tr>
+          <td>{{ result.ticket.ticket_code }}</td>
+          <td>{{ result.ticket.buyer_name }}</td>
+          <td>{{ result.ticket.numbers }}</td>
+          <td>{{ result.match_count }}</td>
+          <td>{% if result.bonus_matched %}일치{% else %}-{% endif %}</td>
+          <td>{{ result.rank }}</td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="6">확인된 복권이 없습니다.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}
