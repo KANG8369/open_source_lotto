@@ -3,23 +3,46 @@
 
 {% block content %}
 <section class="hero">
-  <div>
-    <p class="eyebrow">Django + Docker 과제</p>
-    <h1>6개의 번호로 오늘의 행운을 확인하세요.</h1>
-    <p class="lead">일반 사용자는 수동 또는 자동 번호로 복권을 구매하고, 발급된 복권 번호로 추첨 결과를 확인할 수 있습니다.</p>
+  <div class="hero-copy">
+    <p class="eyebrow">Django + Docker</p>
+    <h1>6개의 번호로 완성하는 로또 서비스</h1>
+    <p class="lead">수동 선택과 자동 발급, 회차별 추첨 결과 확인까지 한 화면에서 처리합니다.</p>
   </div>
-  {% if latest_draw %}
-    <div class="latest-draw">
-      <span>최근 추첨 {{ latest_draw.round_number }}회차</span>
-      <strong>{{ latest_draw.winning_numbers }}</strong>
-      <small>보너스 {{ latest_draw.bonus_number }}</small>
+  <div class="hero-visual" aria-hidden="true">
+    <div class="lotto-orbit">
+      <span class="lotto-ball ball-a">6</span>
+      <span class="lotto-ball ball-b">12</span>
+      <span class="lotto-ball ball-c">24</span>
+      <span class="lotto-ball ball-d">31</span>
+      <span class="lotto-ball ball-e">38</span>
+      <span class="lotto-ball ball-f">45</span>
     </div>
-  {% endif %}
+  </div>
 </section>
+
+{% if latest_draw %}
+  <section class="draw-strip">
+    <div>
+      <span class="strip-label">최근 추첨</span>
+      <strong>{{ latest_draw.round_number }}회차</strong>
+    </div>
+    <div class="strip-numbers">
+      {% for number in latest_draw.number_list %}
+        <span>{{ number }}</span>
+      {% endfor %}
+      <span class="bonus">{{ latest_draw.bonus_number }}</span>
+    </div>
+  </section>
+{% endif %}
 
 <section class="grid two">
   <article class="panel">
-    <h2>복권 구매</h2>
+    <div class="panel-heading">
+      <div>
+        <p class="eyebrow">Buy ticket</p>
+        <h2>복권 구매</h2>
+      </div>
+    </div>
     <form action="{% url 'lotto:purchase_ticket' %}" method="post" class="form">
       {% csrf_token %}
       {{ purchase_form.non_field_errors }}
@@ -44,7 +67,12 @@
   </article>
 
   <article class="panel">
-    <h2>당첨 확인</h2>
+    <div class="panel-heading">
+      <div>
+        <p class="eyebrow">Check result</p>
+        <h2>당첨 확인</h2>
+      </div>
+    </div>
     <form action="{% url 'lotto:check_ticket' %}" method="post" class="form compact">
       {% csrf_token %}
       <label>

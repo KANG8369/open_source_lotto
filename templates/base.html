@@ -10,7 +10,10 @@
 <body>
   <header class="site-header">
     <nav class="nav">
-      <a class="brand" href="{% url 'lotto:home' %}">6/45 Lotto</a>
+      <a class="brand" href="{% url 'lotto:home' %}">
+        <span class="brand-mark">45</span>
+        <span>6/45 Lotto</span>
+      </a>
       <div class="nav-links">
         <a href="{% url 'lotto:home' %}">구매/확인</a>
         <a href="{% url 'lotto:staff_dashboard' %}">관리자</a>

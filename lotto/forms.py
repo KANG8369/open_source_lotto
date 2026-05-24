@@ -5,6 +5,11 @@ from .models import Draw, Ticket
 
 
 class TicketPurchaseForm(forms.ModelForm):
+    purchase_type = forms.ChoiceField(
+        label="구매 방식",
+        choices=Ticket.PURCHASE_TYPE_CHOICES,
+        widget=forms.RadioSelect,
+    )
     manual_numbers = forms.CharField(
         label="수동 번호",
         required=False,
