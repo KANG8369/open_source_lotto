@@ -17,7 +17,7 @@ services:
   web:
     build: .
     container_name: lotto-web
-    command: sh -c "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:8000"
+    command: sh -c "python manage.py migrate && python manage.py seed_admin && python manage.py collectstatic --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:8000"
     environment:
       DJANGO_SECRET_KEY: change-this-secret-key-for-production
       DJANGO_DEBUG: "1"
